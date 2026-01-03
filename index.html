@@ -1,22 +1,60 @@
 <!DOCTYPE html>
-<html lang="en">
-    <head>
-        <meta charset="UTF-8">
-        <meta name="viewport" content="width=device-width, initial-scale=1.0">
-        <title>Document</title>
-        <link rel="stylesheet" href="../styles/">
-        <link rel="preconnect" href="https://fonts.googleapis.com">
-        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-        <link href="https://fonts.googleapis.com/css2?family=Quicksand:wght@300..700&display=swap" rel="stylesheet">
-    </head>
-    <body>
-        <div class="promt" id="prompt">
-            <button class="close-button" id="closeButton">X</button>
-            <video id="promptVideo" width="100%" controls>
-                <source id="promptVideoSource" type="video/mp4">
-                Your browser does not support the video tag.
-            </video>
-        </div>
-        <script type="module" src="../scripts/script.js"></script>
-    </body>
+<html>
+<head>
+  <title>Login</title>
+</head>
+<body>
+
+<h2>Login</h2>
+
+<input id="email" type="email" placeholder="Email"><br><br>
+<input id="password" type="password" placeholder="Password"><br><br>
+
+<button onclick="login()">Login</button>
+<button onclick="signup()">Sign Up</button>
+
+<p id="error"></p>
+
+<script type="module">
+  import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
+  import {
+    getAuth,
+    signInWithEmailAndPassword,
+    createUserWithEmailAndPassword
+  } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-auth.js";
+
+    const firebaseConfig = {
+    apiKey: "AIzaSyBoWv63ViMLw_68DHYf-AOcCbKEj2VbVdc",
+    authDomain: "bbotvids.firebaseapp.com",
+    projectId: "bbotvids",
+    storageBucket: "bbotvids.firebasestorage.app",
+    messagingSenderId: "852311482336",
+    appId: "1:852311482336:web:38aa629989dfea4bf4d585"
+    };
+
+  const app = initializeApp(firebaseConfig);
+  const auth = getAuth(app);
+
+  window.login = function () {
+    signInWithEmailAndPassword(
+      auth,
+      email.value,
+      password.value
+    )
+    .then(() => window.location.href = "dashboard.html")
+    .catch(err => error.innerText = err.message);
+  };
+
+  window.signup = function () {
+    createUserWithEmailAndPassword(
+      auth,
+      email.value,
+      password.value
+    )
+    .then(() => window.location.href = "dashboard.html")
+    .catch(err => error.innerText = err.message);
+  };
+</script>
+
+</body>
 </html>
