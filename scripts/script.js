@@ -19,7 +19,7 @@ closeButton.addEventListener("click", closePrompt);
 promptVideo.addEventListener("ended", playNext);
 
 function playCurrent() {
-    promptVideo.src = `https://opoly.fly.dev/video/${currentIndex}`;
+    promptVideo.src = //`https://opoly.fly.dev/video/${currentIndex}`;
     promptVideo.load();
     promptVideo.play();
 }
