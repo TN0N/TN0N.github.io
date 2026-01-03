@@ -1,0 +1,41 @@
+body{
+    margin: 0px;
+    height:100vh;
+    width: 100%;;
+    background-color: black;
+    display: flex;
+    text-align: center;
+    align-items: center;
+    justify-content: center;
+    font-family: "Quicksand", sans-serif;
+}
+img {
+    width: 50%;
+}
+.promt {
+    width: 95%;
+    height: 95%;
+    border-radius: 20px;
+    text-align: center;
+    align-items: center;
+    justify-content: center;
+    position: fixed;
+    display: none;
+    flex-direction: column;
+}
+.close-button {
+    position: absolute;
+    width: 50px;
+    height: 50px;
+    top: 15px;
+    right: 15px;
+    padding: 8px 12px;
+    background-color: #007bff;
+    color: white;
+    border: none;
+    border-radius: 15px;
+    cursor: pointer;
+}
+.close-button:hover {
+    background-color: #0056b3;
+}
