@@ -11,14 +11,26 @@ const promptVideo = document.getElementById("promptVideo");
 const promptVideoSource = document.getElementById('promptVideoSource');
 
 
-const playlistLength = 53; // must match server array length
+let playlistLength = 0; // must match server array length
 let currentIndex = 0;
 
 //Add event listeners
 closeButton.addEventListener("click", closePrompt);
 promptVideo.addEventListener("ended", playNext);
 
+async function initPlaylist() {
+    const res = await fetch("https://opoly.fly.devplaylist");
+    const { length } = await res.json();
+
+    console.log(length);
+    playlistLength = length;
+    console.log("Playlist length:", playlistLength);
+
+    playCurrent();
+}
+
 function playCurrent() {
+    /*promptVideo.src = `https://opoly.fly.dev/video/${currentIndex}`;*/
     promptVideo.src = `https://opoly.fly.dev/video/${currentIndex}`;
     promptVideo.load();
     promptVideo.play();
@@ -38,7 +50,7 @@ function closePrompt(){
     //promptVideoSource.src = null;
     console.log("closing prompt")
 }
-playCurrent();
+initPlaylist();
 /*
 async function showPrompt(title, text, img, video) {
     
