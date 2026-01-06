@@ -19,7 +19,7 @@ closeButton.addEventListener("click", closePrompt);
 promptVideo.addEventListener("ended", playNext);
 
 async function initPlaylist() {
-    const res = await fetch("https://opoly.fly.devplaylist");
+    const res = await fetch("https://opoly.fly.dev/playlist");
     const { length } = await res.json();
 
     console.log(length);
