@@ -19,7 +19,7 @@ closeButton.addEventListener("click", closePrompt);
 promptVideo.addEventListener("ended", playNext);
 
 async function initPlaylist() {
-    const res = await fetch("https://opoly.fly.dev/playlist");
+    const res = await fetch("https://opoly-sparkling-hill-3775.fly.dev/playlist");
     const { length } = await res.json();
 
     console.log(length);
@@ -30,8 +30,8 @@ async function initPlaylist() {
 }
 
 function playCurrent() {
-    /*promptVideo.src = `https://opoly.fly.dev/video/${currentIndex}`;*/
-    promptVideo.src = `https://opoly.fly.dev/video/${currentIndex}`;
+    promptVideo.src = `https://opoly-sparkling-hill-3775.fly.dev/video/${currentIndex}`;
+    /*promptVideo.src = `http://localhost:3000/video/${currentIndex}`;*/
     promptVideo.load();
     promptVideo.play();
 }
