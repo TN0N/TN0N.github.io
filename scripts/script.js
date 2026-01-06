@@ -1,5 +1,5 @@
 
-console.log("scripts")
+const url = "https://remainder-stable-accept-touched.trycloudflare.com"
 /*const sources = await fetch('sources.json')
   .then(response => response.json())
   .catch(error => console.error('Error loading JSON:', error));*/
@@ -11,6 +11,7 @@ const promptVideo = document.getElementById("promptVideo");
 const promptVideoSource = document.getElementById('promptVideoSource');
 
 
+
 let playlistLength = 0; // must match server array length
 let currentIndex = 0;
 
@@ -19,7 +20,7 @@ closeButton.addEventListener("click", closePrompt);
 promptVideo.addEventListener("ended", playNext);
 
 async function initPlaylist() {
-    const res = await fetch("https://countries-ensuring-philip-selective.trycloudflare.com/playlist");
+    const res = await fetch(`${url}/playlist`);
     const { length } = await res.json();
 
     console.log(length);
@@ -32,7 +33,7 @@ async function initPlaylist() {
 function playCurrent() {
     /*promptVideo.src = `https://opoly-sparkling-hill-3775.fly.dev/video/${currentIndex}`;*/
     /*promptVideo.src = `http://localhost:3000/video/${currentIndex}`;*/
-    promptVideo.src = `https://countries-ensuring-philip-selective.trycloudflare.com/video/${currentIndex}`
+    promptVideo.src = `${url}/video/${currentIndex}`
     promptVideo.load();
     promptVideo.play();
 }
