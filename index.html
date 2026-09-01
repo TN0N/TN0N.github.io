@@ -75,93 +75,35 @@
       max-width: 860px;
       text-align: center;
     }
+    .videoListing
+    {
+        display: block;
+        width: 500px;
+        height: 300px;
+        object-fit: cover;
+    }
+    .videoListing
+    {
+        display: block;
+        width: 500px;
+        height: 300px;
+        object-fit: cover;
+    }
+    .videoListing:hover
+    {
+      background-color: #4338ca;
+      transform: scale(1.05);
+    }
   </style>
+  <script src="build_page.js"></script>
 </head>
-<body>
-  <h1>🎬 Local Video Player</h1>
-
-  <div class="input-row">
-    <input type="text" id="urlInput" placeholder="Paste your video URL here..." />
-    <button onclick="playVideo()">Play</button>
-  </div>
-  <video id="player" controls autoplay></video>
-  <div id="error">⚠️ Could not load video. The server may be blocking playback or the URL has expired.</div>
-
-  <div class="input-row" style="justify-content: center;">
-    <button id="tokenBtn" onclick="fetchToken()">🔑 Get Access Token</button>
-  </div>
-  <div id="tokenOutput"></div>
-
-  <p class="hint">Uses a native &lt;video&gt; tag — works with direct MP4 URLs even when other online players fail due to CORS.</p>
-
-  <script>
-    const input = document.getElementById('urlInput');
-    const player = document.getElementById('player');
-    const error = document.getElementById('error');
-    const tokenBtn = document.getElementById('tokenBtn');
-    const tokenOutput = document.getElementById('tokenOutput');
-
-    // Allow pressing Enter to play
-    input.addEventListener('keydown', e => { if (e.key === 'Enter') playVideo(); });
-
-    function playVideo() {
-      const url = input.value.trim();
-      if (!url) return;
-      error.style.display = 'none';
-      player.style.display = 'block';
-      player.src = url;
-      player.load();
-      player.play().catch(() => {});
-    }
-
-    player.addEventListener('error', () => {
-      player.style.display = 'none';
-      error.style.display = 'block';
-    });
-
-    // Degoo token fetcher
-    const DEGOO_URL = "https://rest-api.degoo.com/access-token/v2";
-
-    async function getToken() {
-      const headers = {
-        "content-type": "application/json",
-        "x-api-authentication": "zIDZwkjMzIDN3MjYtYGZhlTL2QWY00CNlZWZtgzY5QDN3MjY",
-        "User-Agent": "Mozilla/5.0",
-        "Referer": "https://app.degoo.com/",
-      };
-      const payload = {
-        RefreshToken: "wEeGfv..9cjbMUuldwuS6ydwCTgSrt0agCNsJM70axtIpaZt7G1uFh38dui3ewIRVrCR4ZK7aWmJg2MNunKrxw",
-      };
-
-      const response = await fetch(DEGOO_URL, {
-        method: "POST",
-        headers,
-        body: JSON.stringify(payload),
-        signal: AbortSignal.timeout(30000),
-      });
-
-      const responseData = await response.json();
-      return responseData.AccessToken;
-    }
-
-    async function fetchToken() {
-      tokenBtn.disabled = true;
-      tokenBtn.textContent = "Fetching…";
-      tokenOutput.style.display = "none";
-
-      try {
-        const token = await getToken();
-        tokenOutput.style.display = "block";
-        tokenOutput.textContent = "✅ AccessToken: " + token;
-      } catch (err) {
-        tokenOutput.style.display = "block";
-        tokenOutput.style.color = "#ff6b6b";
-        tokenOutput.textContent = "❌ Failed to fetch token: " + err.message;
-      } finally {
-        tokenBtn.disabled = false;
-        tokenBtn.textContent = "🔑 Get Access Token";
-      }
-    }
-  </script>
-</body>
+  <body>
+    <h1>🎬 Local Video Player</h1>
+      <div class="input-row">
+        <button onclick="shiftLeft()">LEFT</button>
+        <button onclick="shiftRight()">RIGHT</button>
+      </div>
+    <video id="player" controls autoplay></video>
+    <div id="error">⚠️ Could not load video. The server may be blocking playback or the URL has expired.</div>
+  </body>
 </html>
