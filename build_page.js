@@ -1,3 +1,62 @@
+import { initializeApp } from "https://www.gstatic.com/firebasejs/12.18.0/firebase-app.js";
+import { getFirestore, collection, doc, getDoc, setDoc, getDocs, deleteDoc } from "https://www.gstatic.com/firebasejs/12.18.0/firebase-firestore.js";
+
+const firebaseConfig = {
+  apiKey: "AIzaSyABExr-Jx2pMn7G8u_fXtG2HrBAaiFulmY",
+  authDomain: "videos-ac477.firebaseapp.com",
+  projectId: "videos-ac477",
+  storageBucket: "videos-ac477.firebasestorage.app",
+  messagingSenderId: "973491972666",
+  appId: "1:973491972666:web:b5ea6ee7ca6f722d652303"
+};
+
+const app = initializeApp(firebaseConfig);
+const db = getFirestore(app);
+
+
+const docRef = doc(db, "videos", "first");
+const docSnap = await getDoc(docRef);
+
+
+
+class Video
+{
+    constructor(code, title, image, src, tags)
+    {
+        this.code = code,
+        this.title = title,
+        this.image = image,
+        this.src = src,
+        this.tags = tags
+    }
+    toString()
+    {
+        return this.code + " " + this.title + " " + this.image + " " + this.src + " " + this.tags;
+    }
+}
+
+const videoConverter =
+{
+    toFirestore: (video) => {
+        return {
+            code: video.code,
+            title: video.title,
+            image: video.image,
+            src: video.src,
+            tags: video.tags
+        }
+    },
+    fromFirestore: (snapshot, options) => {
+        const data = snapshot.data(options);
+        return new Video(data.code, data.title, data.image, data.src, data.tags);
+    }
+}
+//console.log(videoConverter.fromFirestore(docSnap));
+/*
+await addDoc(collection(db, "messages"), {
+  text: "Hello from GitHub Pages!",
+  createdAt: new Date()
+});*/
 const sources_url = 'sources.json';
 const ERROR_LOADING_JSON = 'Error loading JSON:';
 const videoListingClass = 'videoListing';
@@ -12,6 +71,23 @@ let VIDEOS;
 
 
 async function loadData() {
+
+  let list = [];
+
+  const querySnapshot = await getDocs(collection(db, "videos"));
+
+  querySnapshot.forEach((doc) => {
+    list.push(doc.data());
+  });
+
+  // Shuffle the array
+  for (let i = list.length - 1; i > 0; i--) {
+    const j = Math.floor(Math.random() * (i + 1));
+    [list[i], list[j]] = [list[j], list[i]];
+  }
+
+  return list;
+    /*
   try {
     const response = await fetch(sources_url);
     if (!response.ok) {
@@ -23,13 +99,19 @@ async function loadData() {
   catch (error) {
     console.error(ERROR_LOADING_JSON, error);
     return null;
-  }
+  }*/
 }
 
 function buildLink(video)
 {
   const link = document.createElement('a');
-  link.href = video.src;
+  link.addEventListener('click', async ()=>{
+    const videos_watched_ref = collection(db, "videos_watched");
+    const videos_ref = collection(db, "videos_watched");
+    await setDoc(doc(videos_watched_ref, video.code), videoConverter.toFirestore(video));
+    await deleteDoc(doc(videos_ref, video.code));
+  });
+  //link.href = video.src;
   link.appendChild(buildVideo(video));
   return link;
 }
@@ -64,9 +146,7 @@ async function shiftRight()
   console.log("shifting right");
   if (INDEX < VIDEOS_COUNT + listingColumns){
     INDEX += listingColumns;
-    await document.body.removeChild(document.body.getElementsByClassName(videoTableClass)[0]);
-    console.log(getVideos(VIDEOS, INDEX, listingColumns));
-    await document.body.appendChild(buildTable(getVideos(VIDEOS, INDEX, listingColumns)));
+    await buildTable(document.getElementById("videoTable"), getVideos(VIDEOS, INDEX, listingColumns));
   }
 }
 async function shiftLeft()
@@ -74,9 +154,7 @@ async function shiftLeft()
   console.log("shifting left");
   if (0 > INDEX - listingColumns){
     INDEX -= listingColumns;
-    await document.body.removeChild(document.body.getElementsByClassName(videoTableClass)[0]);
-    console.log(getVideos(VIDEOS, INDEX, listingColumns));
-    await document.body.appendChild(buildTable(getVideos(VIDEOS, INDEX, listingColumns)));
+    await buildTable(document.getElementById("videoTable"), getVideos(VIDEOS, INDEX, listingColumns));
   }
 }
 function getVideos(videos, index, number)
@@ -86,9 +164,13 @@ function getVideos(videos, index, number)
 }
 
 
-function buildTable(videos) {
-  const table = document.createElement('table');
-  table.classList.add(videoTableClass);
+function buildTable(table, videos) {
+  //table.classList.add(videoTableClass);
+
+  while (table.firstChild) {
+    table.removeChild(table.firstChild);
+  }
+
   const rowCount = Math.ceil(videos.length / listingColumns);
 
   for (let i = 0; i < rowCount; i++) {
@@ -102,8 +184,23 @@ function buildTable(videos) {
   return table;
 }
  
+
+async function uploadToFirestore(videos)
+{
+  const videos_ref = collection(db, "videos");
+  for (let video in videos)
+  {
+    await setDoc(doc(videos_ref, videos[video].code), videoConverter.toFirestore(videos[video]));
+  }
+}
 async function buildPage() {
   VIDEOS = await loadData();
+
+  document.getElementById("left").addEventListener('click', shiftLeft);
+  document.getElementById("right").addEventListener('click', shiftRight);
+
+
+  //await uploadToFirestore(VIDEOS);
   VIDEOS_COUNT = VIDEOS.length;
   if (!VIDEOS) {
     console.error('No video data available; aborting page build.');
@@ -112,8 +209,11 @@ async function buildPage() {
   if (document.body.getElementsByClassName(videoTableClass)[0]!=null)
     document.body.removeChild(document.body.getElementsByClassName(videoTableClass)[0]);
 
-  
-  document.body.appendChild(buildTable(getVideos(VIDEOS, INDEX, listingColumns)));
+  let table = document.getElementById("videoTable");
+  await buildTable(table, getVideos(VIDEOS, INDEX, listingColumns));
 }
  
 buildPage();
+
+
+

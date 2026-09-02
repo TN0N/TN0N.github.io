@@ -21,8 +21,6 @@
     .input-row {
       display: flex;
       width: 100%;
-      max-width: 860px;
-      gap: 10px;
     }
     input[type="text"] {
       flex: 1;
@@ -85,8 +83,8 @@
     .videoListing
     {
         display: block;
-        width: 500px;
-        height: 300px;
+        width: 300px;
+        height: 200px;
         object-fit: cover;
     }
     .videoListing:hover
@@ -95,13 +93,14 @@
       transform: scale(1.05);
     }
   </style>
-  <script src="build_page.js"></script>
+  <script type="module" src="build_page.js"></script>
 </head>
   <body>
     <h1>🎬 Local Video Player</h1>
       <div class="input-row">
-        <button onclick="shiftLeft()">LEFT</button>
-        <button onclick="shiftRight()">RIGHT</button>
+        <button id="left">&#60;</button>
+        <table id="videoTable"></table>
+        <button id="right">&#62;</button>
       </div>
     <video id="player" controls autoplay></video>
     <div id="error">⚠️ Could not load video. The server may be blocking playback or the URL has expired.</div>
