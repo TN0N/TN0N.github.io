@@ -111,7 +111,7 @@ function buildLink(video)
     await setDoc(doc(videos_watched_ref, video.code), videoConverter.toFirestore(video));
     await deleteDoc(doc(videos_ref, video.code));
   });
-  //link.href = video.src;
+  link.href = video.src;
   link.appendChild(buildVideo(video));
   return link;
 }
